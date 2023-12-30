@@ -38,7 +38,10 @@ const connectDB = async (DATABASE_URL, DATABASE) => {
       console.log("Admin Update successfully..");
     }
 
-    console.log("Database Connected Successfully..");
+    console.log("");
+    console.log(`──────────────────────────────────────────────────────────┐
+     \n|-------> ✅ Database Connected Successfully.. © 😎😁     |
+                  \n──────────────────────────────────────────────────────────┘`);
   } catch (err) {
     console.log("Database Not connected", err.message);
   }

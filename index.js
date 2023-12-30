@@ -56,11 +56,14 @@ const server = app.listen(port, () => {
       : "http";
   const { address, port } = server.address();
   const host = address === "::" ? "127.0.0.1" : address;
-  console.log(`Server listening at ${protocol}://${host}:${port}`);
+  // console.log(`Server listening at ${protocol}://${host}:${port}`);
+  console.log(`──────────────────────────────────────────────────────────┐
+|  \n| ✅ Server listening at ${protocol}://${host}:${port} © (*^_^*)  |
+|              \n──────────────────────────────────────────────────────────┘`);
 });
 
 // Connect to MongoDB
-const DATABASE_URL = process.env.DB_URL;
+const DATABASE_URL = process.env.DB_URL || "mongodb://127.0.0.1:27017";
 // const DATABASE_URL = 'mongodb://127.0.0.1:27017'
 const DATABASE = process.env.DB || "realEstate1";
 
