@@ -9,6 +9,7 @@ const Commune = require("../../model/urban/commune.model");
 const index = async (req, res) => {
   const query = req.query;
   query.deleted = false;
+  console.log(` -- Start get all residences with query : ${query} -- `);
   // let result = await Property.find(query)
   let allData = await Property.find(query)
     .populate({
@@ -16,8 +17,10 @@ const index = async (req, res) => {
       match: { deleted: false }, // Populate only if createBy.deleted is false
     })
     .exec();
+  console.log(` -- getting residences size: ${allData.length} -- `);
 
   const result = allData.filter((item) => item.createBy !== null);
+  console.log(` -- getting residences after filter size: ${result.length} -- `);
 
   res.status(200).json({
     message: "Vos proprieté ont été récupéré avec succès",
@@ -34,18 +37,18 @@ const add = async (req, res) => {
     // let existingQuartier = await Quartier.findOne({ nom: quartier });
 
     // if (!existingQuartier) {
-    //   // Si le quartier n'existe pas, créez-en un nouveau
-    //   existingQuartier = await new Quartier({ nom: quartier }).save();
+    // // Si le quartier n'existe pas, créez-en un nouveau
+    // existingQuartier = await new Quartier({ nom: quartier }).save();
     // }
 
     // // Créez une nouvelle propriété avec les détails fournis
     // const property = new Property({
-    //   propertyType,
-    //   propertyAddress,
-    //   // ... (autres champs de la propriété)
-    //   ville: "ID_de_la_ville", // Remplacez par l'ID réel de la ville choisie
-    //   quartier: existingQuartier._id // Utilisez l'ID du quartier existant ou nouvellement créé
-    //   // ...
+    // propertyType,
+    // propertyAddress,
+    // // ... (autres champs de la propriété)
+    // ville: "ID_de_la_ville", // Remplacez par l'ID réel de la ville choisie
+    // quartier: existingQuartier._id // Utilisez l'ID du quartier existant ou nouvellement créé
+    // // ...
     // });
     // ------------------------------------------------
     await property.save();
@@ -91,17 +94,19 @@ const view = async (req, res) => {
     // Trouvez les détails de la ville associée à cette propriété
     const villeDetails = await Ville.findOne({ _id: property.ville });
 
-    // Trouvez les détails de la commune associée à cette propriété (si vous avez une référence de commune dans le modèle de propriété)
-    const communeDetails = await Commune.findOne({ _id: property.commune }); // Assurez-vous d'avoir une clé communeId dans votre modèle Property
+    // Trouvez les détails de la commune associée à cette propriété (si vous avez une référence de commune dans le modèle de
+    //propriété)
+    const communeDetails = await Commune.findOne({ _id: property.commune }); // Assurez-vous d'avoir une clé communeId dans
+    //votre modèle Property
 
     // if (communeDetails && communeDetails.ville) {
-    //   const villeDetails_oh = await Ville.findOne({
-    //     _id: communeDetails.ville,
-    //   });
-    //   // console.log(villeDetails_oh);
+    // const villeDetails_oh = await Ville.findOne({
+    // _id: communeDetails.ville,
+    // });
+    // // console.log(villeDetails_oh);
 
-    //   // Intégrez les détails de la ville à l'intérieur de l'objet communeDetails
-    //   communeDetails.villeDetails = villeDetails_oh;
+    // // Intégrez les détails de la ville à l'intérieur de l'objet communeDetails
+    // communeDetails.villeDetails = villeDetails_oh;
     // }
     // console.log(communeDetails);
     // Fusionnez les détails de la propriété avec les détails de la ville et de la commune
@@ -147,22 +152,22 @@ const deleteMany = async (req, res) => {
 
 // const storage = multer.diskStorage({
 // destination: function (req, file, cb) {
-//     const uploadDir = 'uploads/Property/PropertyPhotos';
-//     fs.mkdirSync(uploadDir, { recursive: true });
-//     cb(null, uploadDir);
+// const uploadDir = 'uploads/Property/PropertyPhotos';
+// fs.mkdirSync(uploadDir, { recursive: true });
+// cb(null, uploadDir);
 // },
 // filename: function (req, file, cb) {
-//     const uploadDir = 'uploads/Property';
-//     const filePath = path.join(uploadDir, file.originalname);
+// const uploadDir = 'uploads/Property';
+// const filePath = path.join(uploadDir, file.originalname);
 
-//     // Check if the file already exists in the destination directory
-//     if (fs.existsSync(filePath)) {
-//         // For example, you can append a timestamp to the filename to make it unique
-//         const timestamp = Date.now() + Math.floor(Math.random() * 90);
-//         cb(null, file.originalname.split('.')[0] + '-' + timestamp + '.' + file.originalname.split('.')[1]);
-//     } else {
-//         cb(null, file.originalname);
-//     }
+// // Check if the file already exists in the destination directory
+// if (fs.existsSync(filePath)) {
+// // For example, you can append a timestamp to the filename to make it unique
+// const timestamp = Date.now() + Math.floor(Math.random() * 90);
+// cb(null, file.originalname.split('.')[0] + '-' + timestamp + '.' + file.originalname.split('.')[1]);
+// } else {
+// cb(null, file.originalname);
+// }
 // },
 // });
 
