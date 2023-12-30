@@ -1,5 +1,5 @@
 const User = require("../../model/schema/user");
-// const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // Admin register
@@ -14,11 +14,11 @@ const adminRegister = async (req, res) => {
         .json({ message: "Admin already exist please try another email" });
     } else {
       // Hash the password
-      // const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
       // Create a new user
       const user = new User({
         username,
-        password: password,
+        password: hashedPassword,
         firstName,
         lastName,
         phoneNumber,
@@ -45,11 +45,11 @@ const register = async (req, res) => {
         .json({ message: "user already exist please try another email" });
     } else {
       // Hash the password
-      // const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
       // Create a new user
       const user = new User({
         username,
-        password: password,
+        password: hashedPassword,
         firstName,
         lastName,
         phoneNumber,
@@ -144,19 +144,32 @@ const edit = async (req, res) => {
 
 const login = async (req, res) => {
   try {
+    console.log(
+      "\n------------------- DEBUT DE L'AUTENTIFICATION -------------------"
+    );
     const { username, password } = req.body;
+    console.log(
+      "-------------------> DONNEES RECU : \n" +
+        "Username : " +
+        username +
+        "\nPassword : " +
+        password
+    );
     // Find the user by username
     const user = await User.findOne({ username, deleted: false });
     if (!user) {
+      console.log("-------------------> ❌ Utilisateur non trouvé ❌");
       res
         .status(401)
         .json({ error: "Authentication failed, invalid username" });
       return;
     }
     // Compare the provided password with the hashed password stored in the database
-    // const passwordMatch = await bcrypt.compare(password, user.password);
-    // if (!passwordMatch) {
-    if (password !== user.password) {
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      console.log(
+        "-------------------> Les mots de passe ne correspondent pas 🔑 ❌"
+      );
       res
         .status(401)
         .json({ error: "Authentication failed,password does not match" });
@@ -167,10 +180,16 @@ const login = async (req, res) => {
       expiresIn: "1d",
     });
 
+    if (token) {
+      console.log("-------------------> Token crée avec succes 🔗 ✅");
+    }
+
     res
       .status(200)
       .setHeader("Authorization", `Bearer${token}`)
       .json({ token: token, user });
+
+    console.log("----------> L'authentification est un succès ✅✅✅ ");
   } catch (error) {
     res.status(500).json({ error: "An error occurred" });
   }
