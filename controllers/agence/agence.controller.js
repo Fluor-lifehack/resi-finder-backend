@@ -1,14 +1,14 @@
 const Agence = require("../../model/schema/agence.model");
-// const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const agenceModel = require("../../model/schema/agence.model");
 
 exports.registerAgence = async (req, res) => {
   try {
-    // const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const nouvelleAgence = new Agence({
       ...req.body,
-      password: req.body.password,
+      password: hashedPassword,
     });
     await nouvelleAgence.save();
     res.status(201).json({ success: true, data: nouvelleAgence });
@@ -20,12 +20,12 @@ exports.registerAgence = async (req, res) => {
 exports.loginAgence = async (req, res) => {
   const { email, password } = req.body;
   try {
-    // const agence = await Agence.findOne({ email }).select("+password");
-    // if (!agence || !(await bcrypt.compare(password, agence.password))) {
-    //   return res
-    //     .status(401)
-    //     .json({ success: false, error: "Email ou mot de passe incorrect" });
-    // }
+    const agence = await Agence.findOne({ email }).select("+password");
+    if (!agence || !(await bcrypt.compare(password, agence.password))) {
+      return res
+        .status(401)
+        .json({ success: false, error: "Email ou mot de passe incorrect" });
+    }
     const token = jwt.sign({ id: agence._id }, process.env.JWT_SECRET, {
       expiresIn: "23h",
     });

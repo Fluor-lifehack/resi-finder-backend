@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../model/schema/user");
-// const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 
 const connectDB = async (DATABASE_URL, DATABASE) => {
   try {
@@ -19,12 +19,12 @@ const connectDB = async (DATABASE_URL, DATABASE) => {
       const username = "admin@gmail.com";
       const password = "password";
       // Hash the password
-      // const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
       // Create a new user
       const user = new User({
         _id: new mongoose.Types.ObjectId("64d33173fd7ff3fa0924a109"),
         username,
-        password: password,
+        password: hashedPassword,
         firstName,
         lastName,
         phoneNumber,
