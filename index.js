@@ -49,30 +49,30 @@ app.get("/", async (req, res) => {
 
 // Get port from environment and store in Express.
 
-// const server = app.listen(port, () => {
-//   const protocol =
-//     process.env.HTTPS === "true" || process.env.NODE_ENV === "production"
-//       ? "https"
-//       : "http";
-//   const { address, port } = server.address();
-//   const host = address === "::" ? "127.0.0.1" : address;
-//   // console.log(`Server listening at ${protocol}://${host}:${port}`);
-//   console.log(`──────────────────────────────────────────────────────────┐
-// |  \n| ✅ Server listening at ${protocol}://${host}:${port} © (*^_^*)  |
-// |              \n──────────────────────────────────────────────────────────┘`);
-// });
-
-app.listen(process.env.PORT || port, () =>
+const server = app.listen(port, () => {
+  const protocol =
+    process.env.HTTPS === "true" || process.env.NODE_ENV === "production"
+      ? "https"
+      : "http";
+  const { address, port } = server.address();
+  const host = address === "::" ? "127.0.0.1" : address;
+  // console.log(`Server listening at ${protocol}://${host}:${port}`);
   console.log(`──────────────────────────────────────────────────────────┐
-   \n|----------> ✅ Server listening at : ${port} © (*^_^*)      |
-               \n──────────────────────────────────────────────────────────┘`)
-);
+|  \n| ✅ Server listening at ${protocol}://${host}:${port} © (*^_^*)  |
+|              \n──────────────────────────────────────────────────────────┘`);
+});
+
+// app.listen(process.env.PORT || port, () =>
+//   console.log(`──────────────────────────────────────────────────────────┐
+//    \n|----------> ✅ Server listening at : ${port} © (*^_^*)      |
+//                \n──────────────────────────────────────────────────────────┘`)
+// );
 
 // Connect to MongoDB
-// const DATABASE_URL = process.env.DB_URL || "mongodb://127.0.0.1:27017";
-const DATABASE_URL =
-  "mongodb+srv://anibev3:k6WQS2aJQQlLQQjD@anibev3.xvcpn0e.mongodb.net/realEstate1?retryWrites=true&w=majority";
-// const DATABASE = process.env.DB || "realEstate1";
-const DATABASE = "realEstate1";
+const DATABASE_URL = process.env.DB_URL || "mongodb://127.0.0.1:27017";
+// const DATABASE_URL =
+// "mongodb+srv://anibev3:k6WQS2aJQQlLQQjD@anibev3.xvcpn0e.mongodb.net/realEstate1?retryWrites=true&w=majority";
+const DATABASE = process.env.DB || "realEstate1";
+// const DATABASE = "realEstate1";
 
 db(DATABASE_URL, DATABASE);
