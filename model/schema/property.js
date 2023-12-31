@@ -185,25 +185,24 @@ const property = new mongoose.Schema({
         artMural: Boolean,
         couleursRideaux: String,
       },
-      // ... (autres détails que vous souhaitez ajouter)
     },
   ],
 
   ville: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Ville", // Assurez-vous que c'est le bon nom de modèle
+    ref: "Ville",
     required: true,
   },
   commune: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Commune", // Assurez-vous que c'est le bon nom de modèle
+    ref: "Commune",
     required: true,
   },
 
   // Référence à Quartier
   quartier: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Quartier", // Assurez-vous que c'est le bon nom de modèle
+    ref: "Quartier",
     // required: true
   },
   featured: {

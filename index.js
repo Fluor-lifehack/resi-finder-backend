@@ -7,6 +7,8 @@ const port = 5001;
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
+// const { initialRoles } = require("./controllers/role-gestion/initialise.role");
+const Role = require("./model/schema/role.model");
 
 //Setup Express App
 const app = express();
@@ -70,9 +72,46 @@ const server = app.listen(port, () => {
 
 // Connect to MongoDB
 const DATABASE_URL = process.env.DB_URL || "mongodb://127.0.0.1:27017";
-// const DATABASE_URL =
-// "mongodb+srv://anibev3:k6WQS2aJQQlLQQjD@anibev3.xvcpn0e.mongodb.net/realEstate1?retryWrites=true&w=majority";
 const DATABASE = process.env.DB || "realEstate1";
-// const DATABASE = "realEstate1";
 
 db(DATABASE_URL, DATABASE);
+
+// console.log(db(DATABASE_URL, DATABASE));
+
+// function initialRoles() {
+//   console.log("\nOn est dans la fonction initRole\n");
+//   Role.estimatedDocumentCount((err, count) => {
+//     if (!err && count === 0) {
+//       new Role({
+//         name: "patient",
+//       }).save((err) => {
+//         if (err) {
+//           console.log("error", err);
+//         }
+
+//         console.log("added 'patient' to roles collection");
+//       });
+
+//       new Role({
+//         name: "assistant",
+//       }).save((err) => {
+//         if (err) {
+//           console.log("error", err);
+//         }
+
+//         console.log("added 'assistant' to roles collection");
+//       });
+
+//       new Role({
+//         name: "chief_medecin",
+//       }).save((err) => {
+//         if (err) {
+//           console.log("error", err);
+//         }
+
+//         console.log("added 'chief_medecin' to roles collection");
+//       });
+//     }
+//   });
+// }
+// initialRoles();
