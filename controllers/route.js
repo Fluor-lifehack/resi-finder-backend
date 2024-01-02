@@ -27,6 +27,7 @@ const regionRoute = require("./urban/region/_routes");
 const communeRoute = require("./urban/commune/_routes");
 const agenceRoute = require("./../controllers/agence/_route");
 const hotelRoute = require("./../controllers/hotel/_routes");
+const roleRoute = require("./../controllers/role-gestion/_routes");
 
 //Api`s
 router.use("/contact", contactRoute);
@@ -57,5 +58,6 @@ router.use("/ville", villeRoute);
 router.use("/agence", agenceRoute);
 
 router.use("/hotel", hotelRoute);
+router.use("/role", roleRoute);
 
 module.exports = router;

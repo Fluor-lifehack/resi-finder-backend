@@ -11,7 +11,7 @@ const user = new mongoose.Schema({
     type: String,
     required: true,
   },
-  role: { type: String, default: "user" },
+  role: { type: String },
   emailsent: { type: Number, default: 0 },
   textsent: { type: Number, default: 0 },
   outboundcall: { type: Number, default: 0 },
@@ -22,6 +22,12 @@ const user = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  roles: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Role",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", user);

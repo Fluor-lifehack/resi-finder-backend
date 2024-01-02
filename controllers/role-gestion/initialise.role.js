@@ -1,40 +1,25 @@
 const Role = require("../../model/schema/role.model");
 
 function initialRoles() {
-  console.log("\nOn est dans la fonction initRole\n");
-  Role.estimatedDocumentCount((err, count) => {
-    if (!err && count === 0) {
-      new Role({
-        name: "patient",
-      }).save((err) => {
-        if (err) {
-          console.log("error", err);
-        }
+  Role.estimatedDocumentCount()
+    .then((count) => {
+      if (count === 0) {
+        const rolesToAdd = [
+          { name: "admin" },
+          { name: "agence" },
+          { name: "agent" },
+          { name: "user" },
+        ];
 
-        console.log("added 'patient' to roles collection");
-      });
-
-      new Role({
-        name: "assistant",
-      }).save((err) => {
-        if (err) {
-          console.log("error", err);
-        }
-
-        console.log("added 'assistant' to roles collection");
-      });
-
-      new Role({
-        name: "chief_medecin",
-      }).save((err) => {
-        if (err) {
-          console.log("error", err);
-        }
-
-        console.log("added 'chief_medecin' to roles collection");
-      });
-    }
-  });
+        return Role.insertMany(rolesToAdd);
+      }
+    })
+    .then(() => {
+      console.log(`\n|-------> ✅ Added roles to roles collection`);
+    })
+    .catch((error) => {
+      console.log(`\n|-------> ❌ Error initializing roles:`, error);
+    });
 }
 
 module.exports = {

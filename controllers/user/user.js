@@ -1,8 +1,69 @@
 const User = require("../../model/schema/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Role = require("../../model/schema/role.model");
+
+// exports.signup = (req, res) => {
+//   const user = new User({
+//     username: req.body.username,
+//     first_name: req.body.first_name,
+//     last_name: req.body.last_name,
+//     email: req.body.email,
+//     family_members: req.body.family_members,
+//     password: bcrypt.hashSync(req.body.password, 8),
+//   });
+
+//   user.save((err, user) => {
+//     if (err) {
+//       res.status(500).send({ message: err });
+//       return;
+//     }
+
+//     if (req.body.roles) {
+//       Role.find(
+//         {
+//           name: { $in: req.body.roles },
+//         },
+//         (err, roles) => {
+//           if (err) {
+//             res.status(500).send({ message: err });
+//             return;
+//           }
+
+//           user.roles = roles.map((role) => role._id);
+//           user.save((err) => {
+//             if (err) {
+//               res.status(500).send({ message: err });
+//               return;
+//             }
+
+//             res.send({ message: "Utilisateur enregistré avec succes ✅" });
+//           });
+//         }
+//       );
+//     } else {
+//       Role.findOne({ name: "user" }, (err, role) => {
+//         if (err) {
+//           res.status(500).send({ message: err });
+//           return;
+//         }
+
+//         user.roles = [role._id];
+//         user.save((err) => {
+//           if (err) {
+//             res.status(500).send({ message: err });
+//             return;
+//           }
+
+//           res.send({ message: "Utilisateur enregistré avec succes ✅" });
+//         });
+//       });
+//     }
+//   });
+// };
 
 // Admin register
+
 const adminRegister = async (req, res) => {
   try {
     const { username, password, firstName, lastName, phoneNumber } = req.body;
@@ -42,26 +103,44 @@ const register = async (req, res) => {
     if (user) {
       return res
         .status(401)
-        .json({ message: "user already exist please try another email" });
+        .json({ message: "user already exists, please try another email" });
     } else {
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
+
       // Create a new user
-      const user = new User({
+      const newUser = new User({
         username,
         password: hashedPassword,
         firstName,
         lastName,
         phoneNumber,
       });
+
       // Save the user to the database
-      await user.save();
-      res.status(200).json({ message: "User created successfully" });
+      await newUser.save();
+
+      if (req.body.roles) {
+        const roles = await Role.find({ name: { $in: req.body.roles } });
+        newUser.roles = roles.map((role) => role._id);
+      } else {
+        const defaultRole = await Role.findOne({ name: "user" });
+        newUser.roles = [defaultRole._id];
+      }
+
+      await newUser.save();
+
+      res.send({ message: "Utilisateur enregistré avec succès ✅" });
     }
   } catch (error) {
-    res.status(500).json({ error });
+    console.error("Erreur lors de l'enregistrement de l'utilisateur:", error);
+    res.status(500).json({
+      message: "Erreur serveur lors de l'enregistrement de l'utilisateur",
+    });
   }
 };
+
+module.exports = register;
 
 const index = async (req, res) => {
   try {

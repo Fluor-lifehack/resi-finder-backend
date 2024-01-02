@@ -3,3 +3,27 @@ node_modules/
 .netlify
 .env
 api.md
+
+{
+  "_id": {
+    "$oid": "65874583ea9887c17e09e8fb"
+  },
+  "email": "email@exemple.com",
+  "password": "$2b$10$6tPOm2HFdbxXhWHSfWFd7uT7TWZcJlVi8LgWCPtvb6fp1smDCkH7K",
+  "nomAgence": "Nom de l'agence",
+  "description": "Description de l'agence",
+  "situationGeographique": "Localisation géographique",
+  "contactFix": "+225 27 22 24 64 64",
+  "contactWhatsapp": "+225 07 79 92 99 94",
+  "lienSiteWeb": "https://www.exemple.com",
+  "liens": {
+    "facebook": "https://www.facebook.com/exemple",
+    "twitter": "https://twitter.com/exemple",
+    "tiktok": "https://www.tiktok.com/@exemple",
+    "linkedin": "https://www.linkedin.com/company/exemple"
+  },
+  "aPropos": "À propos de l'agence",
+  "role": "agence",
+  "deleted": false,
+  "__v": 0
+}

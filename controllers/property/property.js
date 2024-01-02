@@ -6,36 +6,6 @@ const Contact = require("../../model/schema/contact");
 const Ville = require("../../model/urban/ville.model");
 const Commune = require("../../model/urban/commune.model");
 
-const index = async (req, res) => {
-  try {
-    const query = req.query;
-    query.deleted = false;
-
-    // Obtenez toutes les propriétés avec les créateurs et les détails de Ville, Commune et Quartier
-    let allData = await Property.find(query)
-      .populate({
-        path: "createBy",
-        match: { deleted: false },
-      })
-      .populate("ville commune quartier")
-      .exec();
-
-    // Filtrer les propriétés qui ont un créateur
-    const result = allData.filter((item) => item.createBy !== null);
-
-    res.status(200).json({
-      message: "Vos propriétés ont été récupérées avec succès",
-      nbr: result.length,
-      data: result,
-    });
-  } catch (error) {
-    console.error("Erreur lors de la récupération des propriétés:", error);
-    res.status(500).json({
-      message: "Erreur serveur lors de la récupération des propriétés",
-    });
-  }
-};
-
 const add = async (req, res) => {
   try {
     const property = new Property(req.body);
@@ -66,6 +36,64 @@ const add = async (req, res) => {
   } catch (err) {
     console.error("Failed to create Property:", err);
     res.status(400).json({ error: "Failed to create Property" });
+  }
+};
+const index = async (req, res) => {
+  try {
+    console.log("──────────────────────────────────────────────────────────");
+    console.log(
+      "|  \n| ✅ Récupération des propriétés en cours... © (*^_^*)  |"
+    );
+    console.log("──────────────────────────────────────────────────────────");
+
+    const query = req.query;
+    query.deleted = false;
+
+    let allData = await Property.find(query)
+      // .populate({
+      //   path: "createBy",
+      //   match: { deleted: false },
+      // })
+      .populate("ville commune quartier")
+      .exec();
+
+    const result = allData.filter((item) => item.createBy !== null);
+
+    console.log(`──────────────────────────────────────────────────────────`);
+    console.log(
+      `|  \n| ✅ Nombre total de propriétés récupérées: ${result.length}  |`
+    );
+    console.log("__________________________________________________________");
+
+    // result.forEach((property, index) => {
+    //   console.log(`──────────────────────────────────────────────────────────`);
+    //   console.log(
+    //     `|  \n| 🏠 Propriété ${index + 1}: ID ${property._id}, Titre: ${
+    //       property.propertyName
+    //     }  |`
+    //   );
+    // console.log(`|  \n| 🧑 Créateur: ${property.createBy}`);
+    // console.log(`|  \n| 🌆 Ville: ${property.ville}`);
+    // console.log(`|  \n| 🏘️ Commune: ${property.commune}`);
+    // console.log(`|  \n| 📍 Quartier: ${property.quartier}`);
+    //   console.log(`──────────────────────────────────────────────────────────`);
+    // });
+
+    res.status(200).json({
+      message: "Vos propriétés ont été récupérées avec succès",
+      nbr: result.length,
+      data: result,
+    });
+  } catch (error) {
+    console.log("──────────────────────────────────────────────────────────");
+    console.log(
+      "|  \n| ❌ Erreur lors de la récupération des propriétés ❌  |"
+    );
+    console.log("──────────────────────────────────────────────────────────");
+    console.error("Détails de l'erreur:", error);
+    res.status(500).json({
+      message: "Erreur serveur lors de la récupération des propriétés",
+    });
   }
 };
 
@@ -491,17 +519,27 @@ const getFeaturedProperties = async (req, res) => {
 };
 
 const getPropertiesByVille = async (req, res) => {
+  console.log(`\n|-------> ✅ Attaque de l'api de get property by city`);
   try {
     // Récupérez toutes les villes
     const villes = await Ville.find();
+    console.log(`\n|-----------> recuperation de toutes les villes`);
 
     // Pour chaque ville, obtenez les détails des propriétés
     const data = await Promise.all(
       villes.map(async (ville) => {
-        // Recherchez les propriétés liées à cette ville
+        console.log(
+          `\n|-----------> Recherchez les propriétés liées à cette ville -----------> `,
+          ville.nom
+        );
         const properties = await Property.find({ ville: ville._id });
 
-        // Retournez les détails formatés pour la ville
+        //
+        console.log(
+          `\n|-----------> Retournez les détails formatés pour la ville`,
+          ville._id
+        );
+
         return {
           nom: ville.nom,
           nombreDeproprieteDansLaVille: properties.length,
@@ -511,6 +549,7 @@ const getPropertiesByVille = async (req, res) => {
         };
       })
     );
+    console.log(`\n|-------> ✅ OK LA RECUPERATION EST UN SUCCES \n`);
 
     res.status(200).json({
       success: true,
